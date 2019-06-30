@@ -1,6 +1,8 @@
 #ifndef COMPLEX_H_INCLUDED
 #define COMPLEX_H_INCLUDED
 
+namespace Qs
+{
 class Complex{
 
     double r;
@@ -24,5 +26,7 @@ Complex operator*(const float d, const Complex& c);
 Complex operator*(const Complex& c, const float d);
 Complex operator*(const int d, const Complex& c);
 Complex operator*(const Complex& c, const int d);
+
+}
 
 #endif // COMPLEX_H_INCLUDED

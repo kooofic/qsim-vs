@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <ostream>
 
+namespace Qs
+{
 class Frac
 {
 private:
@@ -36,4 +38,6 @@ Frac operator/(const int i, const Frac& f);
 std::ostream& operator<<(std::ostream& os, const Frac& f);
 int GCD(int a, int b);
 int LCM(int a, int b);
+
+}
 #endif // FRAC_H_INCLUDED

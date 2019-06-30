@@ -1,5 +1,8 @@
 #include "Vector.h"
 
+namespace Qs
+{
+
 Vector::Vector(int n)
 {
     vec = (MathExpr*)malloc(n*sizeof(MathExpr));
@@ -82,4 +85,6 @@ std::ostream& operator<<(std::ostream &out, const Vector &v)
     out << ')';
 
     return out;
+}
+
 }

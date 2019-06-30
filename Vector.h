@@ -4,6 +4,8 @@
 #include <ostream>
 #include "MathExpr.h"
 
+namespace Qs{
+
 class Vector
 {
     MathExpr* vec;
@@ -27,6 +29,8 @@ public:
 };
 
 std::ostream & operator << (std::ostream &out, const Vector &v);
+
+}
 
 
 #endif // VECTOR_H_INCLUDED

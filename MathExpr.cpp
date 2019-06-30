@@ -1,5 +1,8 @@
 #include "MathExpr.h"
 
+namespace Qs
+{
+
 MathExpr::MathExpr()
 {
     root = NULL;
@@ -1453,4 +1456,6 @@ void Node::DeleteChild(bool left)
         delete this->right;
         this->right = NULL;
     }
+}
+
 }

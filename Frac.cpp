@@ -1,5 +1,7 @@
 #include "Frac.h"
 
+namespace Qs
+{
 Frac::Frac(int n, int d)
 {
     this->nom = n;
@@ -189,4 +191,7 @@ std::ostream& operator<<(std::ostream& os, const Frac& f)
 {
     os << f.nom << '/' << f.den;
     return os;
+}
+
+
 }

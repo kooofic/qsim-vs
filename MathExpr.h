@@ -10,7 +10,7 @@
 #include "Frac.h"
 
 
-
+namespace Qs {
 struct Node
 {
     char* value;
@@ -149,5 +149,7 @@ private:
 
 
 std::ostream& operator<<(std::ostream& os, const MathExpr& m);
+
+}
 
 #endif // MATHEXPR_H_INCLUDED
