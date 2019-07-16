@@ -1,10 +1,9 @@
 #ifndef COMPLEX_H_INCLUDED
 #define COMPLEX_H_INCLUDED
-#include "Operator.h"
 
 namespace Qs
 {
-class Complex : public Operator
+class Complex
 {
 
     double r;

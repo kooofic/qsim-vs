@@ -93,6 +93,20 @@ public:
     Node* ResetNode(Node* n, Node* le, Node* r, Node* p, char val);
     Node* ResetNode(Node* n, Node* l, Node* r, Node* p, const char* val, int le);
 
+	bool SimplifyAdd(Node* root, bool ret);
+	bool SimplifyMin(Node* root, bool ret);
+	bool SimplifyDiv(Node* root, bool ret);
+	bool SimplifyMul(Node* root, bool ret);
+	bool SimplifyPow(Node* root, bool ret);
+	bool SimplifySqr(Node* root, bool ret);
+
+	bool PrioritySimplifyAdd(Node* root, bool ret);
+	bool PrioritySimplifyMin(Node* root, bool ret);
+	bool PrioritySimplifyDiv(Node* root, bool ret);
+	bool PrioritySimplifyMul(Node* root, bool ret);
+	bool PrioritySimplifyPow(Node* root, bool ret);
+	bool PrioritySimplifySqr(Node* root, bool ret);
+
     int NodeToInt(Node* n);
 
     void Simplify();

@@ -463,36 +463,6 @@ MathExpr& MathExpr::operator=(const MathExpr& me)
     return *this;
 }
 
-void MathExpr::Simplify()
-{
-    while(simp(root))
-    {
-        while(prioritySimp(root));
-    }
-    while(prioritySimp(root));
-
-    std::string * s = new std::string();
-
-    *s = "";
-
-    build_string(s, root);
-
-    delete expression;
-
-    explength = s->length();
-
-    expression = new char[explength];
-
-    for(int i = 0; i < explength; i++)
-    {
-        expression[i] = (*s)[i];
-    }
-
-    delete s;
-
-}
-
-
 void MathExpr::build_string(std::string* s, Node* n)
 {
     if(n == NULL) return;
@@ -503,6 +473,35 @@ void MathExpr::build_string(std::string* s, Node* n)
 
     return;
 }
+
+void MathExpr::Simplify()
+{
+	while (simp(root))
+	{
+		while (prioritySimp(root));
+	}
+	while (prioritySimp(root));
+
+	std::string* s = new std::string();
+
+	*s = "";
+
+	build_string(s, root);
+
+	delete expression;
+
+	explength = s->length();
+
+	expression = new char[explength];
+
+	for (int i = 0; i < explength; i++)
+	{
+		expression[i] = (*s)[i];
+	}
+
+	delete s;
+}
+
 
 bool MathExpr::simp(Node* n)
 {
@@ -515,145 +514,32 @@ bool MathExpr::simp(Node* n)
     {
     case '+':
 
-        if(isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
-        {
-            int left = NodeToInt(n->left);
-            int right = NodeToInt(n->right);
-            int r = left + right;
-
-            ResetNode(n, NULL, NULL, n->parent, r);
-
-            return true;
-        }
-        else
-        {
-            return ret;
-        }
+		return SimplifyAdd(n, ret);
         break;
 
     case '-':
 
-        if(n->left == NULL)
-        {
-            return simp(n->right);
-        }
-        if(n->right == NULL)
-        {
-            return false;
-        }
-        if(isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
-        {
-
-            int left = NodeToInt(n->left);
-            int right = NodeToInt(n->right);
-
-            int r = left - right;
-
-            if(r >= 0)
-            {
-                ResetNode(n, NULL, NULL, n->parent, r);
-            }
-            else
-            {
-                ResetNode(n, NULL, NULL, n->parent, '-');
-                Node* c = NewNode(-1*r);
-                n->AddChild(c, false);
-            }
-
-            return true;
-
-        }
-        else
-        {
-            return ret;
-        }
+		return SimplifyMin(n, ret);
         break;
 
     case '*':
 
-        if(isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
-        {
-            int left = NodeToInt(n->left);
-            int right = NodeToInt(n->right);
-
-            int r = left * right;
-
-            ResetNode(n, NULL, NULL, n->parent, r);
-
-            return true;
-        }
-        else
-        {
-            return ret;
-        }
+		return SimplifyMul(n, ret);
         break;
 
     case '/':
 
-        if(isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
-        {
-            int left = NodeToInt(n->left);
-            int right = NodeToInt(n->right);
-
-            int gcd = GCD(left, right);
-
-            if(gcd == right)
-            {
-                int r = left / right;
-
-                ResetNode(n, NULL, NULL, n->parent, r);
-
-                return true;
-            }
-            else if(gcd != 1)
-            {
-                ModifyNodeValue(n->left, left/gcd);
-                ModifyNodeValue(n->right, right/gcd);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return ret;
-        }
+		return SimplifyDiv(n, ret);
         break;
 
     case 'P':
 
-        return ret;
+        return SimplifyPow(n, ret);
         break;
 
     case 'G':
 
-        if(isOnlyNumber(n->left->value, n->left->length))
-        {
-            int right = NodeToInt(n->right);
-
-            double epsilon = 0.00001;
-
-            double rd = sqrt((double)right);
-
-            int ri = (int)rd;
-
-            if(ri + epsilon > rd && ri - epsilon < rd)
-            {
-                ResetNode(n, NULL, NULL, n->parent, ri);
-                return true;
-            }
-            else
-            {
-                return ret;
-            }
-        }
-        else
-        {
-            return ret;
-        }
+		return SimplifySqr(n, ret);
 
         break;
     default:
@@ -662,6 +548,144 @@ bool MathExpr::simp(Node* n)
     }
 
     return false;
+}
+
+bool MathExpr::SimplifyAdd(Node* n, bool ret)
+{
+	if (isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
+	{
+		int left = NodeToInt(n->left);
+		int right = NodeToInt(n->right);
+		int r = left + right;
+
+		ResetNode(n, NULL, NULL, n->parent, r);
+
+		return true;
+	}
+	else
+	{
+		return ret;
+	}
+}
+bool MathExpr::SimplifyMin(Node* n, bool ret)
+{
+	if (n->left == NULL)
+	{
+		return simp(n->right);
+	}
+	if (n->right == NULL)
+	{
+		return false;
+	}
+	if (isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
+	{
+
+		int left = NodeToInt(n->left);
+		int right = NodeToInt(n->right);
+
+		int r = left - right;
+
+		if (r >= 0)
+		{
+			ResetNode(n, NULL, NULL, n->parent, r);
+		}
+		else
+		{
+			ResetNode(n, NULL, NULL, n->parent, '-');
+			Node* c = NewNode(-1 * r);
+			n->AddChild(c, false);
+		}
+
+		return true;
+
+	}
+	else
+	{
+		return ret;
+	}
+}
+bool MathExpr::SimplifyDiv(Node* n, bool ret)
+{
+	if (isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
+	{
+		int left = NodeToInt(n->left);
+		int right = NodeToInt(n->right);
+
+		int gcd = GCD(left, right);
+
+		if (gcd == right)
+		{
+			int r = left / right;
+
+			ResetNode(n, NULL, NULL, n->parent, r);
+
+			return true;
+		}
+		else if (gcd != 1)
+		{
+			ModifyNodeValue(n->left, left / gcd);
+			ModifyNodeValue(n->right, right / gcd);
+
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return ret;
+	}
+}
+bool MathExpr::SimplifyMul(Node* n, bool ret)
+{
+	if (isOnlyNumber(n->right->value, n->right->length) && isOnlyNumber(n->left->value, n->left->length))
+	{
+		int left = NodeToInt(n->left);
+		int right = NodeToInt(n->right);
+
+		int r = left * right;
+
+		ResetNode(n, NULL, NULL, n->parent, r);
+
+		return true;
+	}
+	else
+	{
+		return ret;
+	}
+}
+bool MathExpr::SimplifyPow(Node* n, bool ret)
+{
+	return false;
+}
+bool MathExpr::SimplifySqr(Node* n, bool ret)
+{
+	if (isOnlyNumber(n->left->value, n->left->length))
+	{
+		int right = NodeToInt(n->right);
+
+		double epsilon = 0.00001;
+
+		double rd = sqrt((double)right);
+
+		int ri = (int)rd;
+
+		if (ri + epsilon > rd && ri - epsilon < rd)
+		{
+			ResetNode(n, NULL, NULL, n->parent, ri);
+			return true;
+		}
+		else
+		{
+			return ret;
+		}
+	}
+	else
+	{
+		return ret;
+	}
 }
 
 
@@ -976,36 +1000,32 @@ bool MathExpr::prioritySimp(Node* n)
     return false;
 }
 
-Node* MathExpr::deleteChildOtherIntoParent(Node* n, bool left)
+
+bool MathExpr::PrioritySimplifyAdd(Node* n, bool ret)
 {
-    if(left)
-    {
-        delete n->left;
-
-        Node* nt = n->right;
-
-        n->value = nt->value;
-        n->length = nt->length;
-        n->right = nt->right;
-        n->left = nt->left;
-
-        delete nt;
-    }
-    else
-    {
-        delete n->right;
-
-        Node* nt = n->left;
-
-        n->value = nt->value;
-        n->length = nt->length;
-        n->right = nt->right;
-        n->left = nt->left;
-
-        delete nt;
-    }
-    return n;
+	return false;
 }
+bool MathExpr::PrioritySimplifyMin(Node* n, bool ret)
+{
+	return false;
+}
+bool MathExpr::PrioritySimplifyDiv(Node* n, bool ret)
+{
+	return false;
+}
+bool MathExpr::PrioritySimplifyMul(Node* n, bool ret)
+{
+	return false;
+}
+bool MathExpr::PrioritySimplifyPow(Node* n, bool ret)
+{
+	return false;
+}
+bool MathExpr::PrioritySimplifySqr(Node* n, bool ret)
+{
+	return false;
+}
+
 
 SearchResult MathExpr::searchForSimpable(Node* n, int op, int num, bool left, bool division, int r)
 {
@@ -1151,6 +1171,37 @@ SearchResult MathExpr::searchForSimpable(Node* n, int op, int num, bool left, bo
     {
         return ri;
     }
+}
+
+Node* MathExpr::deleteChildOtherIntoParent(Node* n, bool left)
+{
+	if (left)
+	{
+		delete n->left;
+
+		Node* nt = n->right;
+
+		n->value = nt->value;
+		n->length = nt->length;
+		n->right = nt->right;
+		n->left = nt->left;
+
+		delete nt;
+	}
+	else
+	{
+		delete n->right;
+
+		Node* nt = n->left;
+
+		n->value = nt->value;
+		n->length = nt->length;
+		n->right = nt->right;
+		n->left = nt->left;
+
+		delete nt;
+	}
+	return n;
 }
 
 Node* MathExpr::ModifyNodeValue(Node* n, int val)
