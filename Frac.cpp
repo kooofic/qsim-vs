@@ -15,14 +15,14 @@ Frac::Frac(int n, int d)
             throw std::invalid_argument("Denominator cannot be zero!");
     }
 }
-
+/*
 void Frac::Simplify()
 {
     int gcd = GCD(this->nom, this->den);
 
     this->nom = this->nom/gcd;
     this->den = this->den/gcd;
-}
+}*/
 
 int GCD(int a, int b)
 {
@@ -141,10 +141,11 @@ Frac const Frac::operator/(const int f)
     return ret;
 }
 
+/*
 double const Frac::evaluate()
 {
     return (double)nom/(double)den;
-}
+}*/
 
 Frac operator+(const int i, const Frac& f)
 {

@@ -1,21 +1,37 @@
 #ifndef COMPLEX_H_INCLUDED
 #define COMPLEX_H_INCLUDED
+#include "Operator.h"
 
 namespace Qs
 {
-class Complex{
+class Complex : public Operator
+{
 
     double r;
     double i;
 
-    public :
-        Complex();
-		Complex(double re, double im = 0) { r = re; i = im;  }
+public :
+    Complex()
+    {
 
-        double abs();
-        Complex operator+(const Complex& c);
-        Complex operator-(const Complex& c);
-        Complex operator*(const Complex& c);
+    }
+
+    Complex(double re, double im = 0) { r = re; i = im;  }
+
+    double abs();
+    Complex operator+(const Complex& c);
+    Complex operator-(const Complex& c);
+    Complex operator*(const Complex& c);
+
+    Complex Evaluate()
+    {
+        return Complex(r, i);
+    }
+
+    bool Simplify()
+    {
+        return false;
+    }
 
 
 };

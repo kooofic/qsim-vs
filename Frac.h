@@ -1,22 +1,32 @@
 #ifndef FRAC_H_INCLUDED
 #define FRAC_H_INCLUDED
 
+#include "Complex.h"
 #include <stdexcept>
 #include <ostream>
 
 namespace Qs
 {
-class Frac
+class Frac : public Operator
 {
 private:
     Frac();
 public:
 
-    int nom, den;
+    Operator * nom, den;
 
-    Frac(int n, int d = 1);
+    Frac(Operator * n, Operator * d);
 
-    void Simplify();
+    bool Simplify()
+    {
+        return true;
+    }
+
+
+    Complex Evaluate()
+    {
+        return Complex();
+    }
 
     Frac const operator+(const Frac& f);
     Frac const operator+(const int f);
@@ -27,7 +37,6 @@ public:
     Frac const operator*(const int f);
     Frac const operator/(const int f);
 
-    double const evaluate();
 
 };
 
